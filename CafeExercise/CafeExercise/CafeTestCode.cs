@@ -20,16 +20,11 @@ namespace CafeExercise
 
             }
 
-            // requirement 1. There is a menu that contains a number of items and consists of the following:
-            // Coke
-            // Coffee
-            // Cheese sandwich
-            // steak sandwich
 
             [Test]
             public void Constructing_a_menu_with_items()
             {
-                FoodMenu menu = new FoodMenu();
+                IFoodMenu menu = new FoodMenu();
                 Assert.IsInstanceOf<Item>(menu.GetItem(Item.COKE));
                 Assert.IsInstanceOf<Item>(menu.GetItem(Item.COFFEE));
                 Assert.IsInstanceOf<Item>(menu.GetItem(Item.CHEESE_SANDWICH));
@@ -64,13 +59,30 @@ namespace CafeExercise
             [Test]
             public void Retrieving_an_invalid_item_from_menu()
             {
-                FoodMenu menu = new FoodMenu();
+                IFoodMenu menu = new FoodMenu();
                 Assert.Throws<Exception>(() => menu.GetItem("Cake"));
+            }
+
+            [Test]
+            public void is_any_food_rounded_to_2_places()
+            {
+                IFoodMenu menu = new FoodMenu();
+                List<IItem> items = new List<IItem>()
+                {
+                    menu.GetItem(Item.CHEESE_SANDWICH),
+                    menu.GetItem(Item.COFFEE),
+                    menu.GetItem(Item.COKE),
+                    menu.GetItem(Item.STEAK_SANDWICH)
+                };
+                IBill bill = new Bill();
+                decimal totalBill = bill.Total(items);
+                Assert.IsTrue(decimal.Round(totalBill, 2) == totalBill);
+
             }
 
             public void postive_test_of_item(string name, decimal price, ETemperature temperature, EConsumableType consumable)
             {
-                FoodMenu menu = new FoodMenu();
+                IFoodMenu menu = new FoodMenu();
                 IItem item = menu.GetItem(name);
                 Assert.IsInstanceOf<Item>(item);
                 Assert.IsTrue(item.Description == name);
@@ -82,7 +94,7 @@ namespace CafeExercise
             [Test]
             public void is_totals_for_all_items_are_correct()
             {
-                FoodMenu menu = new FoodMenu();
+                IFoodMenu menu = new FoodMenu();
                 List<IItem> items = new List<IItem>()
                 {
                     menu.GetItem(Item.CHEESE_SANDWICH),
@@ -92,15 +104,14 @@ namespace CafeExercise
                 };
 
                 IBill bill = new Bill();
-                Assert.IsTrue(bill.Total(items) == 8.00m);
+                Assert.IsTrue(bill.Total(items) == 9.60m);
 
             }
 
             [Test]
-
             public void is_totals_for_3_items_correct()
             {
-                FoodMenu menu = new FoodMenu();
+                IFoodMenu menu = new FoodMenu();
                 List<IItem> items = new List<IItem>()
                 {
                     menu.GetItem(Item.CHEESE_SANDWICH),
@@ -109,13 +120,13 @@ namespace CafeExercise
                 };
 
                 IBill bill = new Bill();
-                Assert.IsTrue(bill.Total(items) == 3.5m);
+                Assert.IsTrue(bill.Total(items) == 3.85m);
             }
 
             [Test]
             public void is_totals_for_1_items_correct()
             {
-                FoodMenu menu = new FoodMenu();
+                IFoodMenu menu = new FoodMenu();
                 List<IItem> items = new List<IItem>()
                 {
                     menu.GetItem(Item.COKE)
@@ -126,15 +137,153 @@ namespace CafeExercise
 
             }
 
+
+            [Test]
+            public void is_totals_for_items_that_contain_drinks_correct()
+            {
+                IFoodMenu menu = new FoodMenu();
+                List<IItem> items = new List<IItem>()
+            {
+                menu.GetItem(Item.COFFEE),
+                menu.GetItem(Item.COKE),
+            };
+
+                IBill bill = new Bill();
+                Assert.IsTrue(bill.Total(items) == 1.5m);
+            }
+
+            [Test]
+            public void is_totals_for_items_that_contain_cold_drinks_correct()
+            {
+                IFoodMenu menu = new FoodMenu();
+                List<IItem> items = new List<IItem>()
+            {
+                menu.GetItem(Item.COKE),
+                menu.GetItem(Item.COKE),
+                menu.GetItem(Item.COKE),
+                menu.GetItem(Item.COKE)
+
+
+            };
+
+                IBill bill = new Bill();
+                Assert.IsTrue(bill.Total(items) == 2.0m);
+            }
+
+            [Test]
+            public void is_totals_for_items_that_contain_hot_drinks_correct()
+            {
+                IFoodMenu menu = new FoodMenu();
+                List<IItem> items = new List<IItem>()
+            {
+                menu.GetItem(Item.COFFEE),
+                menu.GetItem(Item.COFFEE),
+                menu.GetItem(Item.COFFEE),
+                menu.GetItem(Item.COFFEE)
+
+
+            };
+
+                IBill bill = new Bill();
+                Assert.IsTrue(bill.Total(items) == 4m);
+            }
+
+
+            [Test]
+            public void is_totals_for_items_that_contain_cold_food_correct()
+            {
+                IFoodMenu menu = new FoodMenu();
+                List<IItem> items = new List<IItem>()
+            {
+                menu.GetItem(Item.CHEESE_SANDWICH),
+                menu.GetItem(Item.COFFEE),
+                menu.GetItem(Item.COKE),
+            };
+
+                IBill bill = new Bill();
+                Assert.IsTrue(bill.Total(items) == 3.85m);
+            }
+
+
+
+            [Test]
+            public void is_totals_for_items_that_contain_hot_food_and_over_20pounds_service_charge_correct()
+            {
+                IFoodMenu menu = new FoodMenu();
+                List<IItem> items = new List<IItem>()
+            {
+                menu.GetItem(Item.CHEESE_SANDWICH),
+                menu.GetItem(Item.COFFEE),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.CHEESE_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+                menu.GetItem(Item.STEAK_SANDWICH),
+            };
+
+                IBill bill = new Bill();
+                Assert.IsTrue(bill.Total(items) == 128.5m);
+            }
+
+            [Test]
+            public void is_totals_for_items_that_contain_hot_food_and_under_20pounds_service_charge_correct()
+            {
+                IFoodMenu menu = new FoodMenu();
+                List<IItem> items = new List<IItem>()
+            {
+                menu.GetItem(Item.CHEESE_SANDWICH),
+                menu.GetItem(Item.COFFEE),
+                menu.GetItem(Item.STEAK_SANDWICH),
+            };
+
+                IBill bill = new Bill();
+                Assert.IsTrue(bill.Total(items) == 9m);
+            }
+
+            [Test]
+            public void is_totals_for_1_hot_item_correct()
+            {
+                IFoodMenu menu = new FoodMenu();
+                List<IItem> items = new List<IItem>()
+                {
+                    menu.GetItem(Item.STEAK_SANDWICH),
+                };
+
+                IBill bill = new Bill();
+                Assert.IsTrue(bill.Total(items) == 5.4m);
+            }
+
             [Test]
             public void is_totals_for_0_items_correct()
             {
-                FoodMenu menu = new FoodMenu();
+                IFoodMenu menu = new FoodMenu();
                 List<IItem> items = new List<IItem>();
+
                 IBill bill = new Bill();
                 Assert.IsTrue(bill.Total(items) == 0m);
-
             }
+
+
+
         }
     }
 }

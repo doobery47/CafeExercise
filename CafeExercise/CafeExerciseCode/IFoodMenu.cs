@@ -8,7 +8,7 @@ namespace CafeExerciseCode
 {
     public interface IFoodMenu
     {
-        Item GetItem(string name);
+        IItem GetItem(string name);
     }
 
 }

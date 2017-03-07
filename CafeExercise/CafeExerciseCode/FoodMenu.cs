@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CafeExerciseCode
 {
-    public class FoodMenu
+    public class FoodMenu :IFoodMenu
     {
         Dictionary<string, Item> _menuItems;
 
@@ -17,7 +17,7 @@ namespace CafeExerciseCode
                 return (IItem)_menuItems[name];
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new Exception("Menu item does not exist");
             }
